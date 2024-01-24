@@ -24,7 +24,7 @@ I haven't included any continuous integration scripts because I don't have the
 resources to run these. Before pushing, you should do, at minimum,
 
     .venv/bin/pytest .
-    .venv/bin/mypy .
+    .venv/bin/mypy . --strict
 
 To run, do
 
