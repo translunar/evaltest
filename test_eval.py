@@ -1,10 +1,10 @@
 import unittest
 
-from eval import Question
+from question import Question
 
 class TestEval(unittest.TestCase):
 
-    def test_permuted_question(self):
+    def test_permuted_question(self) -> None:
         q = Question("Which of these answers is 1?",
                      ["0+1", "2+0", "3-1", "-1"],
                      reason="2+0 is 2. 0+1 is 1. 3-1 is 2.",
@@ -18,7 +18,7 @@ class TestEval(unittest.TestCase):
         self.assertEqual(q.correct_index, q.choices.index("0+1"))
         
         
-    def test_unpermuted_question(self):
+    def test_unpermuted_question(self) -> None:
         q = Question("Which of these answers is 1?",
                      ["5/0", "1/5", "5/5", "-5/5"],
                      correct=2,
@@ -39,7 +39,7 @@ class TestEval(unittest.TestCase):
         content = "Some other chain of thought. Answer: A"
         self.assertEqual(q.measure(content), 0)
 
-    def test_permuted_question_with_nonzero_correct(self):
+    def test_permuted_question_with_nonzero_correct(self) -> None:
         choices = ["5/0", "1/5", "5/5", "-5/5"]
 
         count = 0

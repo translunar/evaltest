@@ -17,6 +17,19 @@ The actual biosecurity evals are not in here for security reasons. You should pu
 
 When sending the evals to the model, the choices are shuffled.
 
+## Developers
+
+This project uses a Python virtualenv and assumes it's in the `.venv/` directory.
+I haven't included any continuous integration scripts because I don't have the
+resources to run these. Before pushing, you should do, at minimum,
+
+    .venv/bin/pytest .
+    .venv/bin/mypy .
+
+To run, do
+
+    .venv/bin/python eval.py
+
 # License
 
 Copyright Juno Woods, PhD

@@ -1,11 +1,24 @@
 import random
 
+from typing import Optional, List
+
 class Question:
-    def __init__(self, q, choices,
-                 correct=0,
-                 reason=None,
-                 permute=False,
-                ):
+    """
+    Represents a portion of an eval, either a few-shot example with a step-by-step reasoning 
+    example or a test question.
+
+    The question is used to generate messages to send to the language model. It does
+    not internally store anything about the response, but has helper functions for
+    parsing the relevant portion of the response and measuring its correctness.
+    """
+    def __init__(
+            self,
+            q: str,
+            choices: List[str],
+            correct: int = 0,
+            reason: Optional[str] = None,
+            permute: bool = False,
+    ):
         """
         Constructor for question class. The question phrase and the answer phrases are mandatory.
         If this represents a few-shot example, then the coder should provide the correct index
@@ -19,8 +32,7 @@ class Question:
         :param q: The question phrase
         :param choices: The answer phrases
         :param correct: The index of the correct answer (defaults to 0)
-        :param reason: The reason to the question (defaults to None, which indicates a few-
-                         shot example)
+        :param reason: The reason to the question (given only for a few-shot example)
         :param permute: Whether to permute the choices (defaults to False)
         """
 
@@ -41,11 +53,14 @@ class Question:
         self.reason = reason
  
     @property
-    def correct_letter(self):
+    def correct_letter(self) -> str:
         return ["A", "B", "C", "D"][self.correct_index]
     
     @property
-    def human(self):
+    def human(self) -> str:
+        """
+        The portion of the prompt that 'pretends' to be the human conversant.
+        """
         choices = self.choices
         return f"""
 {self.q} Please select the correct answer from the following options:
@@ -55,12 +70,16 @@ class Question:
 (D) {choices[3]}
 """ 
     @property
-    def assistant(self):
+    def assistant(self) -> str:
+        """
+        The portion of the prompt that provides the assistant dialog. Only useful
+        in few-shot questions, not in test questions.
+        """
         if self.reason is None:
             raise ValueError("This is not a few-shot example")
         return f"{self.reason} Answer: {self.correct_letter}"
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.reason:
             return f"""
 HUMAN: {self.human}
@@ -73,12 +92,15 @@ HUMAN: {self.human}
 
 ASSISTANT: """
         
-    def choice(self, content):
-        """Given a response from the assistant, parse out the letter indicating the choice."""
+    def choice(self, content: str) -> str:
+        """Given a response from the assistant, parse out the letter indicating the choice.
+        This function need not be on Question, but we might wish to modify the parser
+        in an eval-type-specific way, so here it is.
+        """
         answer = content[-2:].strip()
         return answer
     
-    def measure(self, content):
+    def measure(self, content: str) -> int: # should this return float to accommodate other eval types?
         """Just like choice but returns a 1 if correct, and 0 if incorrect."""
         c = self.choice(content)
         if c == self.correct_letter:
