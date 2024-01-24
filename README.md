@@ -23,12 +23,16 @@ This project uses a Python virtualenv and assumes it's in the `.venv/` directory
 I haven't included any continuous integration scripts because I don't have the
 resources to run these. Before pushing, you should do, at minimum,
 
+    .venv/bin/pip install -r requirements.txt
     .venv/bin/pytest .
     .venv/bin/mypy . --strict
 
 To run, do
 
-    .venv/bin/python eval.py
+    OPENAI_API_KEY="your-key-here" ANTHROPIC_API_KEY="your-other-key-here" .venv/bin/python eval.py
+
+Note that it only queries one of Claude or ChatGPT at a time, and you need to
+set that option in `eval.py`.
 
 # License
 

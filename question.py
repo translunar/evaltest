@@ -105,5 +105,7 @@ ASSISTANT: """
         c = self.choice(content)
         if c == self.correct_letter:
             return 1
-        else:
+        elif c in ("A", "B", "C", "D"):
             return 0
+        else:
+            raise IOError(f"Assistant response ('{content}') was not parseable")
